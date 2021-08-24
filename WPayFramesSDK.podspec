@@ -30,7 +30,7 @@ iOS wrapper around WPay Frames JS SDK.
   s.source           = { :git => "https://github.com/w-pay/sdk-wpay-ios-frames.git", :branch => "main" }
   # s.social_media_url = "https://twitter.com/<TWITTER_USERNAME>"
 
-  s.platform = :ios, "9.0"
+  s.platform = :ios, "11.0"
 
   s.source_files = "WPayFramesSDK/**/*.{swift}"
 
