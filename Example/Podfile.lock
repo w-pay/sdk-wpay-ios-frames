@@ -1,0 +1,16 @@
+PODS:
+  - WPayFramesSDK (0.1.0)
+
+DEPENDENCIES:
+  - WPayFramesSDK (from `../`)
+
+EXTERNAL SOURCES:
+  WPayFramesSDK:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  WPayFramesSDK: 8ccd32b9274ef390fff3f097451a766d94a9e44d
+
+PODFILE CHECKSUM: 1992ba3179c0f8cbe3ab61dda840885d787153e7
+
+COCOAPODS: 1.9.3
