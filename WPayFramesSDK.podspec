@@ -7,7 +7,7 @@
 #
 
 Pod::Spec.new do |s|
-  s.cocoapods_version = ">= 1.9"
+  s.cocoapods_version = ">= 1.10"
 
   s.name             = "WPayFramesSDK"
   s.version          = "0.1.0"
