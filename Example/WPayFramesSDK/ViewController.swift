@@ -7,9 +7,15 @@
 //
 
 import UIKit
+import WebKit
 
 class ViewController: UIViewController {
-
+    @IBOutlet weak var messageView: UILabel!
+    @IBOutlet weak var framesView: WKWebView!
+    @IBOutlet weak var submit: UIButton!
+    @IBOutlet weak var Clear: UIButton!
+    @IBOutlet weak var load: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.

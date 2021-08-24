@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -20,11 +18,87 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ACCEPT - 1234" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="874-mG-IMW">
+                                <rect key="frame" x="128" y="100" width="119" height="33"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qjj-7C-31b">
+                                <rect key="frame" x="37.5" y="199" width="300" height="100"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="0rK-Z4-9Vd"/>
+                                    <constraint firstAttribute="width" constant="300" id="au6-AK-oPe"/>
+                                </constraints>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="hbG-o4-ii4">
+                                <rect key="frame" x="57.5" y="318.5" width="260" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cC0-6a-Qxl">
+                                        <rect key="frame" x="0.0" y="0.0" width="100" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="xr9-eC-RDu" userLabel="width ≥ 100"/>
+                                        </constraints>
+                                        <state key="normal" title="Submit"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cvX-LK-CQ5">
+                                        <rect key="frame" x="160" y="0.0" width="100" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="b3Y-zA-fw0"/>
+                                        </constraints>
+                                        <state key="normal" title="Clear"/>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="260" id="arq-ie-GF1" userLabel="width = 260"/>
+                                </constraints>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="WcF-NZ-MPg">
+                                <rect key="frame" x="57.5" y="368.5" width="260" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NAG-He-Q9Z" userLabel="Load">
+                                        <rect key="frame" x="0.0" y="0.0" width="260" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="ysJ-0E-vsV" userLabel="width ≥ 100"/>
+                                        </constraints>
+                                        <state key="normal" title="Load"/>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="260" id="R2f-VF-TNZ" userLabel="width = 260"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="874-mG-IMW" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="100" id="CUo-IS-2g5"/>
+                            <constraint firstItem="WcF-NZ-MPg" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Dh4-WK-Xw1"/>
+                            <constraint firstItem="hbG-o4-ii4" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="GW5-lR-E7j"/>
+                            <constraint firstItem="qjj-7C-31b" firstAttribute="top" secondItem="874-mG-IMW" secondAttribute="bottom" constant="66" id="Gvv-cu-Z4K"/>
+                            <constraint firstItem="WcF-NZ-MPg" firstAttribute="top" secondItem="qjj-7C-31b" secondAttribute="bottom" constant="69.5" id="bb1-3s-WbA" userLabel="Stack View.top = Web View.bottom + 70"/>
+                            <constraint firstItem="874-mG-IMW" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="dqr-vh-AZS"/>
+                            <constraint firstItem="hbG-o4-ii4" firstAttribute="centerX" secondItem="WcF-NZ-MPg" secondAttribute="centerX" id="fkd-3w-XtZ"/>
+                            <constraint firstItem="qjj-7C-31b" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="g1D-N8-hQR"/>
+                            <constraint firstItem="WcF-NZ-MPg" firstAttribute="top" secondItem="hbG-o4-ii4" secondAttribute="bottom" constant="20" id="yNh-3r-cW9"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="Clear" destination="cvX-LK-CQ5" id="bwu-4q-2WD"/>
+                        <outlet property="framesView" destination="qjj-7C-31b" id="60w-Jz-8hW"/>
+                        <outlet property="load" destination="NAG-He-Q9Z" id="aLU-yF-aCt"/>
+                        <outlet property="messageView" destination="874-mG-IMW" id="Mvw-FP-wxW"/>
+                        <outlet property="submit" destination="cC0-6a-Qxl" id="n1X-AX-sCh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="137" y="133"/>
         </scene>
     </scenes>
 </document>
