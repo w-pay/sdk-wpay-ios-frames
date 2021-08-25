@@ -1,4 +1,4 @@
-public enum FramesErrors {
+public enum FramesErrors: Error {
 	case FATAL_ERROR(message: String)
 	case NETWORK_ERROR(message: String)
 	case TIMEOUT_ERROR(message: String = "The request timed out")
