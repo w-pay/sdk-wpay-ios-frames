@@ -17,11 +17,12 @@ load the web content to allow the user to securely enter information like credit
 Consequently the Application can tailor the HTML as required, applying styling and adding other
 web content.
 
-To use the Frames JS SDK in an Android application, an instance of `FramesView` should be added
-to a layout in the Application.
+To use the Frames JS SDK in an iOS application, an instance of `FramesView` should be added
+to a layout in the Application. To use in a Storyboard, add a `WKWebiView` to the layout and
+set the `Custom Class` of the view to `FramesView` from the `WPayFramesSDK` module (XCode 12.2)
 
 An Application can instruct the JS SDK via the posting of `JavascriptCommand`s, and receive messages
-from the SDK via the use of the `FramesWebView.Callback`. This allows the Application to orchestrate
+from the SDK via the use of the `FramesView.Callback`. This allows the Application to orchestrate
 the usage of the SDK with native logic and UI components eg: Buttons.
 
 ## Frames SDK Version
@@ -38,13 +39,12 @@ The Application currently bears the responsibility for acquiring an access token
 
 Logging within the SDK is comprised of two levels.
 
-The first is the interaction between the Application
-and the Frames JS SDK/WebView. The `FramesView.Logger` interface allows the Application to provide
-a logger to the view.
+The first is the interaction between the Application and the Frames JS SDK/WebView. 
+The `FramesView.Logger` interface allows the Application to provide a logger to the view.
 
 The second is the logging from within the Frames JS SDK itself. The `LogLevel` enum allows the
 log level for the JS SDK to be set at SDK creation time. If none is given, the log level defaults
-to `ERROR` for security.
+to `ERROR` for security. Note that logging from the JS SDK is dumped to the Console.
 
 # Sample App
 
