@@ -4,7 +4,7 @@ public class FramesConfig: Encodable {
 	private let apiBase: String
 	private let logLevel: Int
 
-	init(apiKey: String, authToken: String, apiBase: String, logLevel: LogLevel = LogLevel.ERROR) {
+	public init(apiKey: String, authToken: String, apiBase: String, logLevel: LogLevel = LogLevel.ERROR) {
 		self.apiKey = apiKey
 		self.authToken = authToken
 		self.apiBase = apiBase

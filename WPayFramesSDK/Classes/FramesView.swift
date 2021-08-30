@@ -10,36 +10,203 @@ function logger(level) {
     window.webkit.messageHandlers.log.postMessage(JSON.stringify({
       level,
       message: Array.prototype.slice.call(arguments).join(",")                           
-    }))
+    }));
   }
 }
                                 
-console.log = logger("log")
-console.warn = logger("warn")
-console.error = logger("error")
-console.debug = logger("debug")
+console.log = logger("log");
+console.warn = logger("warn");
+console.error = logger("error");
+console.debug = logger("debug");
                                 
 window.addEventListener("error", function(e) {
-  console.error(`${e.message} at ${e.filename}:${e.lineno}:${e.colno}`)
+  console.error(`${e.message} at ${e.filename}:${e.lineno}:${e.colno}`);
 })
+                   
+window.onload = function() { 
+	window.webkit.messageHandlers.handleFramesSDKLoaded.postMessage(FRAMES !== undefined);
+}
 """
 
-public class FramesView : WKWebView {
-	public func configure() throws {
-    let html = """
-        <html>
-            <head>
-                <script>
-                    window.onload = function() { console.log(`Frames exists: ${FRAMES !== undefined}`) }
-                </script>
-            </head>
-        </html>
-    """
+/**
+	Configuration about how the Application wants to host the SDK.
+ */
+public class FramesViewConfig {
+	/// The host HTML for the SDK.
+	let html: String
+
+	/// Whether assets can still be loaded if SSL validation fails.
+	let allowInvalidSsl: Bool
+
+	public init(html: String, allowInvalidSsl: Bool = false) {
+		self.html = html
+		self.allowInvalidSsl = allowInvalidSsl
+	}
+}
+
+/**
+	Allows an Application to receives messages from the JS SDK/WebView
+ */
+public protocol FramesViewCallback {
+	func onComplete(response: String)
+
+	/**
+		Called when an error occurs.
+	 */
+	func onError(error: FramesErrors)
+
+	/**
+		Called as the progress changes loading the web content.
+	 */
+	func onProgressChanged(progress: Int)
+
+	/**
+		Called when the validation status of an element has changed.
+
+		- Parameter domId: The ID of the element in the HTML DOM tree
+		- Parameter isValid: Whether the contents of the element is valid or not.
+	 */
+	func onValidationChange(domId: String, isValid: Bool)
+
+	/**
+		Called when the focus has changed on an element
+
+		- Parameter domId: The ID of the element in the HTML DOM tree
+		- Parameter isFocussed: Whether the element is focussed or not
+	 */
+	func onFocusChange(domId: String, isFocussed: Bool)
+
+	/**
+		Called when all the web content has been loaded and the Frames JS SDK is ready to
+		use.
+	 */
+	func onPageLoaded()
+
+	/**
+		Called when JS SDK Action has added content to the host page.
+	 */
+	func onRendered()
+}
+
+/**
+  Allows applications to decide the fate of log messages.
+ */
+public protocol FramesViewLogger {
+	func log(tag: String, message: String)
+}
+
+/**
+  Hosts the Frames JS SDK inside an WKWebView.
+
+  Allows applications to receive messages from the JS SDK via a [FramesView.Callback], and to send
+  the JS SDK commands via posting [JavascriptCommand]s
+
+  Using the Frames JS SDK follows the following steps
+  1. The host application configures the view
+  2. The host HTML "page" is "loaded" into the web view
+  3. Other web resources (ie: the Frames JS) are "loaded" into the host HTML page.
+
+  The FrameView is now considered "loaded" that is all resources are available for use. SDK Actions
+  can be posted into the view.
+
+  4. HTML elements are "rendered" on the page. Once rendered, the elements can be interacted with
+  by the user and events are emitted.
+
+  5. As the user interacts with the web elements, events are emitted and passed to the the callback
+  6. The user can submit the form, or clear the form.
+  7. After form submission, the application should complete the action.
+ */
+public class FramesView : WKWebView, WKScriptMessageHandler {
+	private var config: FramesViewConfig?
+	private var callback: FramesViewCallback?
+	private var logger: FramesViewLogger?
+
+	public override init(frame: CGRect, configuration: WKWebViewConfiguration) {
+		super.init(frame: frame, configuration: configuration)
+
+		initialiseWebView()
+	}
+
+	public required init?(coder: NSCoder) {
+		super.init(coder: coder)
+
+		initialiseWebView()
+	}
+
+	public override func observeValue(
+		forKeyPath keyPath: String?,
+		of object: Any?,
+		change: [NSKeyValueChangeKey : Any]?,
+		context: UnsafeMutableRawPointer?
+	) {
+		if (keyPath == "estimatedProgress") {
+			callback?.onProgressChanged(progress: Int(estimatedProgress * 100))
+		}
+	}
+
+	public func userContentController(
+		_ userContentController: WKUserContentController,
+		didReceive message: WKScriptMessage
+	) {
+		if (message.name == "handleFramesSDKLoaded") {
+			let result = message.body as! Bool
+
+			if (result == true) {
+				callback?.onPageLoaded()
+			}
+			else {
+				callback?.onError(error: FramesErrors.SDK_INIT_ERROR(message: "FRAMES not found in window"))
+			}
+		}
+	}
+
+	/**
+	  The starting point for Applications to configure the interaction between native code
+	  and the JS SDK. It must be called first.
+
+	  - Parameter config: Configuration about how to host the SDK.
+	  - Parameter callback: Optional callback to receive messages from the SDK.
+	  - Parameter logger: Optional logger instance.
+	 */
+	public func configure(
+		config: FramesViewConfig,
+		callback: FramesViewCallback?,
+		logger: FramesViewLogger?
+	) {
+		self.config = config
+		self.callback = callback
+		self.logger = logger
+	}
+
+	/**
+	  Load the SDK into the host page.
+
+	  This will create a new instance of the JS SDK inside the host page.
+
+	  - Parameter config: Configuration for the JS SDK.
+	  - Throws: `FramesErrors.SDK_INIT_ERROR` if the JS SDK can't be loaded
+	 */
+	public func loadFrames(config: FramesConfig) throws {
+		// inject the Frames JS SDK
+		configuration.userContentController.addUserScript(
+			WKUserScript(source: try loadFramesSDKSource(), injectionTime: .atDocumentStart, forMainFrameOnly: true)
+		)
+
+		loadHTMLString(self.config!.html, baseURL: nil)
+	}
+
+	private func initialiseWebView() {
+		/*
+		 * Register an observer so we can get told about the progress of loading the web content.
+		 */
+		addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
 
 		addJavascriptHandlers()
-		try injectUserScripts()
 
-		loadHTMLString(html, baseURL: nil)
+		// inject the global script
+		configuration.userContentController.addUserScript(
+			WKUserScript(source: globalScript, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+		)
 	}
 
 	private func addJavascriptHandlers() {
@@ -52,20 +219,12 @@ public class FramesView : WKWebView {
 
 		// add the handler for "log" messages
 		configuration.userContentController.add(ConsoleLogHandler(), name: "log")
+		configuration.userContentController.add(self, name: "handleFramesSDKLoaded")
 	}
 
-	private func injectUserScripts() throws {
-		// inject the global script
-		configuration.userContentController.addUserScript(
-			WKUserScript(source: globalScript, injectionTime: .atDocumentStart, forMainFrameOnly: true)
-		)
-
-		// inject the Frames JS SDK
-		configuration.userContentController.addUserScript(
-			WKUserScript(source: try loadFramesSDKSource(), injectionTime: .atDocumentStart, forMainFrameOnly: true)
-		)
-	}
-
+	/**
+	  - Throws: `FramesErrors.SDK_INIT_ERROR` if the JS SDK can't be loaded.
+	 */
 	private func loadFramesSDKSource() throws -> String {
 		let frameworkBundle = Bundle(for: FramesView.self)
 

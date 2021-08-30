@@ -22,7 +22,7 @@ to a layout in the Application. To use in a Storyboard, add a `WKWebiView` to th
 set the `Custom Class` of the view to `FramesView` from the `WPayFramesSDK` module (XCode 12.2)
 
 An Application can instruct the JS SDK via the posting of `JavascriptCommand`s, and receive messages
-from the SDK via the use of the `FramesView.Callback`. This allows the Application to orchestrate
+from the SDK via the use of the `FramesViewCallback`. This allows the Application to orchestrate
 the usage of the SDK with native logic and UI components eg: Buttons.
 
 ## Frames SDK Version
@@ -40,7 +40,7 @@ The Application currently bears the responsibility for acquiring an access token
 Logging within the SDK is comprised of two levels.
 
 The first is the interaction between the Application and the Frames JS SDK/WebView. 
-The `FramesView.Logger` interface allows the Application to provide a logger to the view.
+The `FramesViewLogger` interface allows the Application to provide a logger to the view.
 
 The second is the logging from within the Frames JS SDK itself. The `LogLevel` enum allows the
 log level for the JS SDK to be set at SDK creation time. If none is given, the log level defaults

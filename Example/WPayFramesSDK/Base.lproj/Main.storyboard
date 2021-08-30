@@ -46,6 +46,9 @@
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="xr9-eC-RDu" userLabel="width ≥ 100"/>
                                         </constraints>
                                         <state key="normal" title="Submit"/>
+                                        <connections>
+                                            <action selector="onSubmit:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="GAY-Cu-GVn"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cvX-LK-CQ5">
                                         <rect key="frame" x="160" y="0.0" width="100" height="30"/>
@@ -53,6 +56,9 @@
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="b3Y-zA-fw0"/>
                                         </constraints>
                                         <state key="normal" title="Clear"/>
+                                        <connections>
+                                            <action selector="onClear:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ynS-zi-qEx"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -68,6 +74,9 @@
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="ysJ-0E-vsV" userLabel="width ≥ 100"/>
                                         </constraints>
                                         <state key="normal" title="Load"/>
+                                        <connections>
+                                            <action selector="onLoad:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="nz9-Jx-fpj"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -89,11 +98,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="Clear" destination="cvX-LK-CQ5" id="bwu-4q-2WD"/>
                         <outlet property="framesView" destination="qjj-7C-31b" id="60w-Jz-8hW"/>
-                        <outlet property="load" destination="NAG-He-Q9Z" id="aLU-yF-aCt"/>
                         <outlet property="messageView" destination="874-mG-IMW" id="Mvw-FP-wxW"/>
-                        <outlet property="submit" destination="cC0-6a-Qxl" id="n1X-AX-sCh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
