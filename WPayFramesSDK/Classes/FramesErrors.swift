@@ -5,4 +5,5 @@ public enum FramesErrors: Error {
 	case FORM_ERROR(message: String)
 	case EVAL_ERROR(message: String)
 	case DECODE_JSON_ERROR(message: String, cause: Error?, json: String)
+	case SDK_INIT_ERROR(message: String, cause: Error? = nil)
 }

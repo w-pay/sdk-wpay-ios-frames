@@ -35,7 +35,7 @@ iOS wrapper around WPay Frames JS SDK.
   s.source_files = "WPayFramesSDK/**/*.{swift}"
 
   s.resource_bundles = {
-    "WPayFramesSDK" => ["WPayFramesSDK/Assets/*.js"]
+    "WPayFramesSDK" => [ "WPayFramesSDK/Assets/*" ]
   }
 
   # s.frameworks = "UIKit", "MapKit"

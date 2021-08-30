@@ -13,7 +13,12 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
-        framesView.configure()
+        do {
+            try framesView.configure()
+        }
+        catch {
+            fatalError("something went wrong")
+        }
     }
 
     override func didReceiveMemoryWarning() {

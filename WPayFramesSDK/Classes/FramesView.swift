@@ -25,18 +25,19 @@ window.addEventListener("error", function(e) {
 """
 
 public class FramesView : WKWebView {
-	public func configure() {
+	public func configure() throws {
     let html = """
         <html>
             <head>
                 <script>
-                    window.onload = function() { console.log('Hello World') }
+                    window.onload = function() { console.log(`Frames exists: ${FRAMES !== undefined}`) }
                 </script>
             </head>
         </html>
     """
 
 		addJavascriptHandlers()
+		try injectUserScripts()
 
 		loadHTMLString(html, baseURL: nil)
 	}
@@ -51,9 +52,41 @@ public class FramesView : WKWebView {
 
 		// add the handler for "log" messages
 		configuration.userContentController.add(ConsoleLogHandler(), name: "log")
+	}
 
+	private func injectUserScripts() throws {
 		// inject the global script
-		configuration.userContentController.addUserScript(WKUserScript(source: globalScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+		configuration.userContentController.addUserScript(
+			WKUserScript(source: globalScript, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+		)
+
+		// inject the Frames JS SDK
+		configuration.userContentController.addUserScript(
+			WKUserScript(source: try loadFramesSDKSource(), injectionTime: .atDocumentStart, forMainFrameOnly: true)
+		)
+	}
+
+	private func loadFramesSDKSource() throws -> String {
+		let frameworkBundle = Bundle(for: FramesView.self)
+
+		guard let bundleURL = frameworkBundle.resourceURL?.appendingPathComponent("WPayFramesSDK.bundle") else {
+			throw FramesErrors.SDK_INIT_ERROR(message: "Can't create resource bundle URL")
+		}
+
+		guard let resourceBundle = Bundle(url: bundleURL) else {
+			throw FramesErrors.SDK_INIT_ERROR(message: "Can't create resource bundle")
+		}
+
+		guard let url = resourceBundle.url(forResource: "framesSDK-2.0.2", withExtension: "js") else {
+			throw FramesErrors.SDK_INIT_ERROR(message: "Can't find Frames JS SDK in framework resource bundle")
+		}
+
+		do {
+			return try String(contentsOf: url, encoding: .utf8)
+		}
+		catch {
+			throw FramesErrors.SDK_INIT_ERROR(message: "Can't read contents of Frames JS SDK", cause: error)
+		}
 	}
 }
 
