@@ -54,7 +54,7 @@ in the sample app document the workflow/usage of the Frames SDK.
 The sample app highlights the ability to combine native controls like buttons with web controls.
 
 Once a card has been tokenised, the instrument ID is displayed. Using that ID the payment instrument
-can then used. THe new instrument will be in the customer's instrument list. To tokenise the same
+can then used. The new instrument will be in the customer's instrument list. To tokenise the same
 card again, the instrument will need to be removed from the customer's profile first.
 
 See:
