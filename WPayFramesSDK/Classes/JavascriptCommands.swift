@@ -30,21 +30,197 @@ public class JavascriptCommand {
 }
 
 /**
+  WKWebView executes JS synchronously, and doesn't wait for asynchronous JS to complete
+  before returning to native code.
+
+  Therefore if we want to compose JS async behaviour we have to create a wrapper function
+  that can be called as part of a JS composition.
+
+  - See: `BuildFramesCommand`
+ */
+public class DelayedJavascriptCommand : JavascriptCommand {
+	public let functionName: String
+
+	public init(functionName: String, command: String) {
+		self.functionName = functionName
+
+		super.init(command: command)
+	}
+}
+
+/**
+  Combines `DelayedJavascriptCommand`s into an command and executes the result.
+
+  Each command is executed first to add the async function to the web view.
+
+  If any error is thrown, it is logged and the Error's `message` is returned to the app.
+  Looking for errors in the Console can aid developers debugging why JS code threw
+  errors.
+
+  On success the FramesView is notified that content has been rendered in the web view.
+ */
+public class BuildFramesCommand : JavascriptCommand {
+	private let commands: [DelayedJavascriptCommand]
+
+	public init(commands: DelayedJavascriptCommand...) {
+		self.commands = commands
+
+		super.init(command:
+			"""
+			frames.build = async function() {
+			    try {
+			        \(commands
+									.map { it in "await frames.\(it.functionName)();" }
+									.joined(separator: "\n")
+							)
+						    
+			        window.webkit.messageHandlers.handleOnRendered.postMessage("")
+			    }
+			    catch(e) {
+			        frames.handleError('build', e)
+			    }
+			};
+
+			frames.build();
+
+			true
+			"""
+		)
+	}
+
+	public override func post(view: FramesView, callback: EvalCallback?) {
+		commands.forEach { it in it.post(view: view) }
+
+		super.post(view: view, callback: callback)
+	}
+}
+
+/**
  Javascript to create a new instance of Frames in the host page
  */
-class InstantiateFramesSDKCommand : JavascriptCommand {
-	init(config: String) {
+public class InstantiateFramesSDKCommand : JavascriptCommand {
+	public init(config: String) {
 		super.init(command:
 			"""
 			const frames = {
 			   handleError: function(fnName, err) {
 			       console.error('frames.' + fnName + ': ' + err)
 			       
-			       window.webkit.messageHandlers.handleError.postMessage.handleOnError(err.message);
+			       window.webkit.messageHandlers.handleOnError.postMessage(err.message);
 			   }
 			};
 
 			frames.sdk = new FRAMES.FramesSDK(\(config));
+
+			true
+			"""
+		)
+	}
+}
+
+/**
+  Creates an SDK Action in the web view.
+
+  Note that this will overwrite any previous action, so make sure each action is completed.
+ */
+public class CreateActionCommand : DelayedJavascriptCommand {
+	public init(action: String, payload: String? = nil) {
+		var args = "FRAMES.ActionTypes.\(action)"
+		if let json = payload {
+			args += ", \(json)"
+		}
+
+		super.init(functionName: "createAction", command:
+			"""
+			frames.createAction = async function() {
+			    frames.action = frames.sdk.createAction(\(args));
+			};
+
+			true
+			"""
+		)
+	}
+}
+
+public class CreateActionControlCommand : DelayedJavascriptCommand {
+	public init(controlType: String, domId: String, payload: String? = nil) {
+		var args = "'\(controlType)', '\(domId)'"
+		if let json = payload {
+			args += ", \(json)"
+		}
+
+		let fnName = "createActionControl_\(domId)"
+
+		super.init(functionName: fnName, command:
+			"""
+			frames.\(fnName) = async function() {
+			    frames.action.createFramesControl(\(args));
+
+					const element = document.getElementById('\(domId)');
+
+					element.addEventListener(FRAMES.FramesEventType.OnValidated, () => { 
+							window.webkit.messageHandlers.handleOnValidated.postMessage({
+								domId: '\(domId)',
+								errors: frames.action.errors()
+							})
+					});
+
+					element.addEventListener(FRAMES.FramesEventType.OnBlur, () => { 
+							window.webkit.messageHandlers.handleOnBlur.postMessage('\(domId)') 
+					});
+
+					element.addEventListener(FRAMES.FramesEventType.OnFocus, () => { 
+							window.webkit.messageHandlers.handleOnFocus.postMessage('\(domId)')
+					});
+			}
+
+			true
+			"""
+		)
+	}
+
+	public convenience init(controlType: ControlType, domId: String, payload: String? = nil) {
+		self.init(controlType: controlType.rawValue, domId: domId, payload: payload)
+	}
+}
+
+public class StartActionCommand : DelayedJavascriptCommand {
+	public init() {
+		super.init(functionName: "startAction", command:
+			"""
+			frames.startAction = async function() {
+			    await frames.action.start();
+			}
+
+			true
+			"""
+		)
+	}
+}
+
+public class ClearFormCommand : JavascriptCommand {
+	public init() {
+		super.init(command: "frames.action.clear()")
+	}
+}
+
+public class SubmitFormCommand : JavascriptCommand {
+	public init() {
+		super.init(command:
+			"""
+			frames.submit = async function() {
+			    try {
+			        await this.action.submit()
+			        
+			        const response = await this.action.complete()
+			        window.webkit.messageHandlers.handleOnComplete.postMessage(JSON.stringify(response))
+			    }
+			    catch(e) {
+			        frames.handleError('submit', e)
+			    }
+			}
+
+			frames.submit();
 
 			true
 			"""

@@ -156,7 +156,12 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 	) {
 		switch message.name {
 			case "handleFramesSDKLoaded": handleFramesSDKLoaded(message: message)
+			case "handleOnBlur": handleOnBlur(message: message)
+			case "handleOnComplete": handleOnComplete(message: message)
 			case "handleOnError": handleOnError(message: message)
+			case "handleOnFocus": handleOnFocus(message: message)
+			case "handleOnRendered": handleOnRendered(message: message)
+			case "handleOnValidated": handleOnValidated(message: message)
 
 			default:
 				callback?.onError(error: FramesErrors.FATAL_ERROR(message: "Unrecognised JS handler \(message.name)"))
@@ -240,8 +245,15 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 
 		// add the handler for "log" messages
 		configuration.userContentController.add(ConsoleLogHandler(), name: "log")
+
+		// add the handlers for the SDK events.
 		configuration.userContentController.add(self, name: "handleFramesSDKLoaded")
+		configuration.userContentController.add(self, name: "handleOnBlur")
+		configuration.userContentController.add(self, name: "handleOnComplete")
 		configuration.userContentController.add(self, name: "handleOnError")
+		configuration.userContentController.add(self, name: "handleOnFocus")
+		configuration.userContentController.add(self, name: "handleOnRendered")
+		configuration.userContentController.add(self, name: "handleOnValidated")
 	}
 
 	private func handleFramesSDKLoaded(message: WKScriptMessage) {
@@ -262,12 +274,58 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 		}
 	}
 
+	private func handleOnBlur(message: WKScriptMessage) {
+		let domId = message.body as! String
+
+		log("handleOnBlur(\(domId)")
+
+		callback?.onFocusChange(domId: domId, isFocussed: false)
+	}
+
+	private func handleOnComplete(message: WKScriptMessage) {
+		let jsonString = message.body as! String
+
+		log("handleOnComplete(\(jsonString))")
+
+		callback?.onComplete(response: jsonString)
+	}
+
 	private func handleOnError(message: WKScriptMessage) {
 		let message = message.body as! String
 
 		log("handleOnError(\(message))")
 
 		callback?.onError(error: FramesErrors.EVAL_ERROR(message: message))
+	}
+
+	private func handleOnFocus(message: WKScriptMessage) {
+		let domId = message.body as! String
+
+		log("handleOnFocus(\(domId))")
+
+		callback?.onFocusChange(domId: domId, isFocussed: true)
+	}
+
+	private func handleOnRendered(message: WKScriptMessage) {
+		log("handleOnRendered()")
+
+		callback?.onRendered()
+	}
+
+	private func handleOnValidated(message: WKScriptMessage) {
+		let body = message.body as! [String: AnyObject]
+		let domId = body["domId"] as! String
+		let errors = body["errors"] as! [String]
+
+		log("handleOnValidated(\(domId), \(errors.joined(separator: ","))")
+
+		if (errors.count > 0) {
+			callback?.onValidationChange(domId: domId, isValid: false)
+			callback?.onError(error: FramesErrors.FORM_ERROR(message: errors[0]))
+		}
+		else {
+			callback?.onValidationChange(domId: domId, isValid: true)
+		}
 	}
 
 	/**
