@@ -254,7 +254,7 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 				callback?.onPageLoaded()
 			}
 			catch {
-				// TODO:
+				callback?.onError(error: error as! FramesErrors)
 			}
 		}
 		else {

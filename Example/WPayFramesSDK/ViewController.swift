@@ -75,6 +75,7 @@ class ViewController: UIViewController, FramesViewCallback {
       case .FORM_ERROR(let message): messageView.text = message
       case .EVAL_ERROR(let message): messageView.text = message
       case .DECODE_JSON_ERROR(let message, _, _): messageView.text = message
+      case .ENCODE_JSON_ERROR(let message, _, _): messageView.text = message
       case .SDK_INIT_ERROR(let message, _): messageView.text = message
     }
   }
