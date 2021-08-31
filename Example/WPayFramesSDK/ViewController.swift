@@ -6,7 +6,7 @@ class ViewController: UIViewController, FramesViewCallback {
   @IBOutlet weak var framesView: FramesView!
 
   @IBAction func onClear(_ sender: Any) {
-    // TODO
+    ClearFormCommand().post(view: framesView)
   }
 
   @IBAction func onLoad(_ sender: Any) {
@@ -32,7 +32,7 @@ class ViewController: UIViewController, FramesViewCallback {
   }
 
   @IBAction func onSubmit(_ sender: Any) {
-    // TODO
+    SubmitFormCommand().post(view: framesView)
   }
     
   override func viewDidLoad() {
@@ -95,7 +95,27 @@ class ViewController: UIViewController, FramesViewCallback {
   func onPageLoaded() {
     debug("onPageLoaded()")
 
-    // TODO: Load card capture.
+    let captureOptions = CaptureCard.Payload(
+      verify: true,
+      save: true,
+      env3DS: nil
+    )
+
+    do {
+      /*
+       * Step 3.
+       *
+       * Add a single line card group to the page
+       */
+      BuildFramesCommand(commands:
+        try CaptureCard(payload: captureOptions).toCommand(),
+        StartActionCommand(),
+        CreateActionControlCommand(controlType: ControlType.CARD_GROUP, domId: "cardElement")
+      ).post(view: framesView, callback: nil)
+    }
+    catch {
+      onError(error: error as! FramesErrors)
+    }
   }
 
   func onRendered() {
