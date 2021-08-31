@@ -28,6 +28,10 @@ window.onload = function() {
 }
 """
 
+let JS_SDK_VERSION = "2.0.2"
+
+public typealias EvalCallback = (Any?, Error?) -> Void
+
 /**
 	Configuration about how the Application wants to host the SDK.
  */
@@ -118,6 +122,8 @@ public protocol FramesViewLogger {
  */
 public class FramesView : WKWebView, WKScriptMessageHandler {
 	private var config: FramesViewConfig?
+	private var sdkConfig: FramesConfig?
+
 	private var callback: FramesViewCallback?
 	private var logger: FramesViewLogger?
 
@@ -148,15 +154,12 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 		_ userContentController: WKUserContentController,
 		didReceive message: WKScriptMessage
 	) {
-		if (message.name == "handleFramesSDKLoaded") {
-			let result = message.body as! Bool
+		switch message.name {
+			case "handleFramesSDKLoaded": handleFramesSDKLoaded(message: message)
+			case "handleOnError": handleOnError(message: message)
 
-			if (result == true) {
-				callback?.onPageLoaded()
-			}
-			else {
-				callback?.onError(error: FramesErrors.SDK_INIT_ERROR(message: "FRAMES not found in window"))
-			}
+			default:
+				callback?.onError(error: FramesErrors.FATAL_ERROR(message: "Unrecognised JS handler \(message.name)"))
 		}
 	}
 
@@ -187,12 +190,30 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 	  - Throws: `FramesErrors.SDK_INIT_ERROR` if the JS SDK can't be loaded
 	 */
 	public func loadFrames(config: FramesConfig) throws {
+		sdkConfig = config
+
 		// inject the Frames JS SDK
 		configuration.userContentController.addUserScript(
 			WKUserScript(source: try loadFramesSDKSource(), injectionTime: .atDocumentStart, forMainFrameOnly: true)
 		)
 
 		loadHTMLString(self.config!.html, baseURL: nil)
+	}
+
+	/**
+	  Evaluates the Javascript command in the WebView
+
+	  Can be used from any thread.
+
+	  - Parameter command: The command to execute
+	  - Parameter callback: If the JS returns a result, the callback will receive it.
+	 */
+	func postCommand(command: JavascriptCommand, callback: EvalCallback? = nil) {
+		let js = command.command
+
+		log("JavascriptCommand: \(js)")
+
+		evaluateJavaScript(js, completionHandler: callback)
 	}
 
 	private func initialiseWebView() {
@@ -220,6 +241,33 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 		// add the handler for "log" messages
 		configuration.userContentController.add(ConsoleLogHandler(), name: "log")
 		configuration.userContentController.add(self, name: "handleFramesSDKLoaded")
+		configuration.userContentController.add(self, name: "handleOnError")
+	}
+
+	private func handleFramesSDKLoaded(message: WKScriptMessage) {
+		let result = message.body as! Bool
+
+		if (result == true) {
+			do {
+				InstantiateFramesSDKCommand(config: try sdkConfig!.toJson()).post(view: self)
+
+				callback?.onPageLoaded()
+			}
+			catch {
+				// TODO:
+			}
+		}
+		else {
+			callback?.onError(error: FramesErrors.SDK_INIT_ERROR(message: "FRAMES not found in window"))
+		}
+	}
+
+	private func handleOnError(message: WKScriptMessage) {
+		let message = message.body as! String
+
+		log("handleOnError(\(message))")
+
+		callback?.onError(error: FramesErrors.EVAL_ERROR(message: message))
 	}
 
 	/**
@@ -236,7 +284,7 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 			throw FramesErrors.SDK_INIT_ERROR(message: "Can't create resource bundle")
 		}
 
-		guard let url = resourceBundle.url(forResource: "framesSDK-2.0.2", withExtension: "js") else {
+		guard let url = resourceBundle.url(forResource: "framesSDK-\(JS_SDK_VERSION)", withExtension: "js") else {
 			throw FramesErrors.SDK_INIT_ERROR(message: "Can't find Frames JS SDK in framework resource bundle")
 		}
 
@@ -246,6 +294,10 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 		catch {
 			throw FramesErrors.SDK_INIT_ERROR(message: "Can't read contents of Frames JS SDK", cause: error)
 		}
+	}
+
+	private func log(_ msg: String) {
+		logger?.log(tag: "FramesView", message: msg)
 	}
 }
 
