@@ -7,6 +7,7 @@ class ViewController: UIViewController, FramesViewCallback {
 
   @IBAction func onClear(_ sender: Any) {
     ClearFormCommand().post(view: framesView)
+    messageView.text = ""
   }
 
   @IBAction func onLoad(_ sender: Any) {
