@@ -19,7 +19,7 @@ class ViewController: UIViewController, FramesViewCallback {
     do {
       try framesView.loadFrames(config: FramesConfig(
         apiKey: "95udD3oX82JScUQ1qyACSOMysyAl93Gb",
-        authToken: "Bearer jbst7UCKR695D93j8tfAd5fG7k2m",
+        authToken: "Bearer WbSRULNyePzpyvR1n2ePHMNVunXp",
         apiBase: "https://dev.mobile-api.woolworths.com.au/wow/v1/pay/instore",
         logLevel: LogLevel.DEBUG
       ))
@@ -67,7 +67,20 @@ class ViewController: UIViewController, FramesViewCallback {
   }
 
   func onComplete(response: String) {
+    debug("onComplete(response: \(response))")
 
+    do {
+      guard let data = try CardCaptureResponse.fromJson(json: response) else {
+        throw FramesErrors.FATAL_ERROR(message: "Missing CardCaptureResponse")
+      }
+
+      let message = "\(data.status!.responseText!) - \(data.paymentInstrument!.itemId!)"
+
+      messageView.text = message
+    }
+    catch {
+      onError(error: error as! FramesErrors)
+    }
   }
 
   func onError(error: FramesErrors) {
