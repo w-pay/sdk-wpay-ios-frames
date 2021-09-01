@@ -1,0 +1,8 @@
+public enum ThreeDSError: String, Decodable {
+	case TOKEN_REQUIRED = "3DS_001"
+	case INVALID_SESSION = "3DS_002"
+	case VALIDATION_FAILED = "3DS_003"
+	case UNSUPPORTED_VERSION = "3DS_004"
+	case SERVICE_UNAVAILABLE = "3DS_005"
+	case UNKNOWN_ERROR = "3DS_500"
+}
