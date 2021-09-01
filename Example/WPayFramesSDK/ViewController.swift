@@ -12,9 +12,9 @@ class ViewController: UIViewController, FramesViewCallback {
 
   @IBAction func onLoad(_ sender: Any) {
     /*
-     * Step 2.
-     *
-     * Load the Frames SDK into the HTML page.
+      Step 2.
+
+      Load the Frames SDK into the HTML page.
      */
     do {
       try framesView.loadFrames(config: FramesConfig(
@@ -40,17 +40,21 @@ class ViewController: UIViewController, FramesViewCallback {
     super.viewDidLoad()
 
     /*
-		 * Step 1.
-		 *
-		 * We need to configure the SDK to provide the "bridge" between the native and web worlds.
+		  Step 1.
+
+		  We need to configure the SDK to provide the "bridge" between the native and web worlds.
 		 */
     framesView.configure(
       config: FramesViewConfig(
         /*
-				 * Note: The SDK will inject the JS SDK into the host page. Applications can however
-				 * add other web content to the page to aid in styling.
+				  Note: The SDK will inject the JS SDK into the host page. Applications can however
+				  add other web content to the page to aid in styling.
+
+				  Note: The SDK will inject a default <meta> tag setting the viewport if no <meta> tag
+				  for the viewport is provided in the host HTML. This is required to have the WKWebView
+				  render the content at the correct "zoom level".
 				 */
-        html: "<html><head></head><body><div id='cardElement'></div></body></html>"
+        html: "<html><body><div id='cardElement'></div></body></html>"
       ),
       callback: self,
       logger: DebugLogger()
@@ -104,9 +108,9 @@ class ViewController: UIViewController, FramesViewCallback {
 
     do {
       /*
-       * Step 3.
-       *
-       * Add a single line card group to the page
+        Step 3.
+
+        Add a single line card group to the page
        */
       BuildFramesCommand(commands:
         try CaptureCard(payload: captureOptions).toCommand(),
