@@ -261,6 +261,7 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 
 		if (result == true) {
 			do {
+				AddDefaultViewportCommand().post(view: self)
 				InstantiateFramesSDKCommand(config: try sdkConfig!.toJson()).post(view: self)
 
 				callback?.onPageLoaded()

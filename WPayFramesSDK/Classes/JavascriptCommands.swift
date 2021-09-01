@@ -95,6 +95,28 @@ public class BuildFramesCommand : JavascriptCommand {
 	}
 }
 
+public class AddDefaultViewportCommand : JavascriptCommand {
+	public init() {
+		super.init(command:
+			"""
+        const head = document.getElementsByTagName("head")[0];
+        const metas = Array.prototype.slice.call(head.getElementsByTagName("meta"))
+        const viewport = metas.find((el) => el.getAttribute("name") === "viewport")
+
+        if (!viewport) {
+          const meta = document.createElement("meta")
+          meta.setAttribute("name", "viewport")
+          meta.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no")
+
+          head.appendChild(meta)
+        }
+
+        true
+      """
+		)
+	}
+}
+
 /**
  Javascript to create a new instance of Frames in the host page
  */
