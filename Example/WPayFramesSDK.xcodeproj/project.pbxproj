@@ -9,11 +9,15 @@
 /* Begin PBXBuildFile section */
 		5A5C7AC34E4111A1BB79845A /* Pods_WPayFramesSDK_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2DB83AB89B66CCA51E0781F /* Pods_WPayFramesSDK_Tests.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		BC8DC0343525C45E08657E3A /* FramesHost.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC8DC54FEFB5819C5AD20D9A /* FramesHost.xib */; };
+		BC8DC0B44302C68A056BF7C6 /* MultiLineCardCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8DC8271BB42A180A73C26A /* MultiLineCardCapture.swift */; };
+		BC8DC699D50C98F389423DF2 /* SingleCardCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8DC3C62B3C012971ACF7C8 /* SingleCardCapture.swift */; };
+		BC8DCC0F0729731E54BD306D /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8DCB028DAC894F50F88ED1 /* PopoverViewController.swift */; };
+		BC8DCF5B9FC861C97A357054 /* FramesHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8DCBC721ABFCFF368677CC /* FramesHost.swift */; };
 		EF3747052DFF4AAEAA6C2F61 /* Pods_WPayFramesSDK_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AC6F27F58790710DE435B83 /* Pods_WPayFramesSDK_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -33,7 +37,6 @@
 		607FACD01AFB9204008FA782 /* WPayFramesSDK_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WPayFramesSDK_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -43,6 +46,11 @@
 		8713D1ABB9966C85AF59C970 /* Pods-WPayFramesSDK_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WPayFramesSDK_Tests.debug.xcconfig"; path = "Target Support Files/Pods-WPayFramesSDK_Tests/Pods-WPayFramesSDK_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		936F241CCA4D2F3A4B57BB89 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		9AC6F27F58790710DE435B83 /* Pods_WPayFramesSDK_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WPayFramesSDK_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC8DC3C62B3C012971ACF7C8 /* SingleCardCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleCardCapture.swift; sourceTree = "<group>"; };
+		BC8DC54FEFB5819C5AD20D9A /* FramesHost.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FramesHost.xib; sourceTree = "<group>"; };
+		BC8DC8271BB42A180A73C26A /* MultiLineCardCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiLineCardCapture.swift; sourceTree = "<group>"; };
+		BC8DCB028DAC894F50F88ED1 /* PopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
+		BC8DCBC721ABFCFF368677CC /* FramesHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FramesHost.swift; sourceTree = "<group>"; };
 		C11EA62D0F859853F7328580 /* Pods-WPayFramesSDK_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WPayFramesSDK_Example.release.xcconfig"; path = "Target Support Files/Pods-WPayFramesSDK_Example/Pods-WPayFramesSDK_Example.release.xcconfig"; sourceTree = "<group>"; };
 		CC3E1B31F1450972ACF20778 /* Pods-WPayFramesSDK_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WPayFramesSDK_Tests.release.xcconfig"; path = "Target Support Files/Pods-WPayFramesSDK_Tests/Pods-WPayFramesSDK_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		F2DB83AB89B66CCA51E0781F /* Pods_WPayFramesSDK_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WPayFramesSDK_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,11 +102,15 @@
 			isa = PBXGroup;
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				BC8DC3C62B3C012971ACF7C8 /* SingleCardCapture.swift */,
+				BC8DC8271BB42A180A73C26A /* MultiLineCardCapture.swift */,
+				BC8DCBC721ABFCFF368677CC /* FramesHost.swift */,
+				BC8DC54FEFB5819C5AD20D9A /* FramesHost.xib */,
+				BC8DCB028DAC894F50F88ED1 /* PopoverViewController.swift */,
 			);
 			name = "Example for WPayFramesSDK";
 			path = WPayFramesSDK;
@@ -249,6 +261,7 @@
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
+				BC8DC0343525C45E08657E3A /* FramesHost.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,8 +344,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				BC8DC699D50C98F389423DF2 /* SingleCardCapture.swift in Sources */,
+				BC8DC0B44302C68A056BF7C6 /* MultiLineCardCapture.swift in Sources */,
+				BC8DCF5B9FC861C97A357054 /* FramesHost.swift in Sources */,
+				BC8DCC0F0729731E54BD306D /* PopoverViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
