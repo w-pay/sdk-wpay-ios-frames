@@ -40,20 +40,20 @@ class ViewController: UIViewController, FramesViewCallback {
     super.viewDidLoad()
 
     /*
-		  Step 1.
+      Step 1.
 
-		  We need to configure the SDK to provide the "bridge" between the native and web worlds.
-		 */
+      We need to configure the SDK to provide the "bridge" between the native and web worlds.
+     */
     framesView.configure(
       config: FramesViewConfig(
         /*
-				  Note: The SDK will inject the JS SDK into the host page. Applications can however
-				  add other web content to the page to aid in styling.
+          Note: The SDK will inject the JS SDK into the host page. Applications can however
+          add other web content to the page to aid in styling.
 
-				  Note: The SDK will inject a default <meta> tag setting the viewport if no <meta> tag
-				  for the viewport is provided in the host HTML. This is required to have the WKWebView
-				  render the content at the correct "zoom level".
-				 */
+          Note: The SDK will inject a default <meta> tag setting the viewport if no <meta> tag
+          for the viewport is provided in the host HTML. This is required to have the WKWebView
+          render the content at the correct "zoom level".
+         */
         html: "<html><body><div id='cardElement'></div></body></html>"
       ),
       callback: self,
