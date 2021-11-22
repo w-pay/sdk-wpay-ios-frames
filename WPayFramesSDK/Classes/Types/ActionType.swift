@@ -20,6 +20,25 @@ public class ActionType {
 }
 
 public class CaptureCard : ActionType {
+	private class ThreeDSPayload : Encodable {
+		let env3DS: ThreeDSEnv
+
+		enum ThreeDSKeys: String, CodingKey {
+			case env3DS
+			case requires3DS
+		}
+
+		init(env3DS: ThreeDSEnv) {
+			self.env3DS = env3DS
+		}
+
+		public func encode(to encoder: Encoder) throws {
+			var container = encoder.container(keyedBy: ThreeDSKeys.self)
+			try container.encode(true, forKey: .requires3DS)
+			try container.encode(env3DS.rawValue, forKey: .env3DS)
+		}
+	}
+
 	public class Payload : Encodable {
 		let verify: Bool
 		let save: Bool
@@ -28,7 +47,7 @@ public class CaptureCard : ActionType {
 		enum PayloadKeys: String, CodingKey {
 			case verify
 			case save
-			case env3DS
+			case threeDS
 		}
 
 		public init(verify: Bool, save: Bool, env3DS: ThreeDSEnv?) {
@@ -43,7 +62,7 @@ public class CaptureCard : ActionType {
 			try container.encode(save, forKey: .save)
 
 			if let env = env3DS {
-				try container.encode(env.rawValue, forKey: .env3DS)
+				try container.encode(ThreeDSPayload(env3DS: env), forKey: .threeDS)
 			}
 		}
 	}
