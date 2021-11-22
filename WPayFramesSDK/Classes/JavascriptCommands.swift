@@ -49,49 +49,61 @@ public class DelayedJavascriptCommand : JavascriptCommand {
 }
 
 /**
-  Combines `DelayedJavascriptCommand`s into an command and executes the result.
-
-  Each command is executed first to add the async function to the web view.
+  Combines `DelayedJavascriptCommand`s into an command and executes the result. Each command is
+  executed first to add the async function to the web view.
 
   If any error is thrown, it is logged and the Error's `message` is returned to the app.
   Looking for errors in the Console can aid developers debugging why JS code threw
   errors.
-
-  On success the FramesView is notified that content has been rendered in the web view.
  */
-public class BuildFramesCommand : JavascriptCommand {
+public class GroupCommand: JavascriptCommand {
 	private let commands: [DelayedJavascriptCommand]
 
-	public init(commands: DelayedJavascriptCommand...) {
+	public init(name: String, commands: [DelayedJavascriptCommand], callback: String = "") {
 		self.commands = commands
 
 		super.init(command:
 			"""
-			frames.build = async function() {
+			frames.\(name) = async function() {
 			    try {
 			        \(commands
 									.map { it in "await frames.\(it.functionName)();" }
 									.joined(separator: "\n")
 							)
-						    
-			        window.webkit.messageHandlers.handleOnRendered.postMessage("")
+			        
+			        \(callback)
 			    }
 			    catch(e) {
-			        frames.handleError('build', e)
+			        frames.handleError('\(name)', e)
 			    }
 			};
 
-			frames.build();
+			frames.\(name)();
 
 			true
 			"""
 		)
 	}
 
+	public convenience init(name: String, commands: DelayedJavascriptCommand...) {
+		self.init(name: name, commands: commands)
+	}
+
 	public override func post(view: FramesView, callback: EvalCallback?) {
-		commands.forEach { it in it.post(view: view) }
+		commands.forEach { command in command.post(view: view) }
 
 		super.post(view: view, callback: callback)
+	}
+}
+
+/**
+  Builds the view that is shown to the user.
+
+  On success the FramesView is notified that content has been rendered in the web view.
+ */
+public class BuildFramesCommand : GroupCommand {
+	public init(commands: DelayedJavascriptCommand...) {
+		super.init(name: "build", commands: commands, callback: "window.webkit.messageHandlers.handleOnRendered.postMessage('')")
 	}
 }
 
@@ -129,7 +141,9 @@ public class InstantiateFramesSDKCommand : JavascriptCommand {
 			       console.error('frames.' + fnName + ': ' + err)
 			       
 			       window.webkit.messageHandlers.handleOnError.postMessage(err.message);
-			   }
+			   },
+			     
+			   actions: {}
 			};
 
 			frames.sdk = new FRAMES.FramesSDK(\(config));
@@ -142,20 +156,22 @@ public class InstantiateFramesSDKCommand : JavascriptCommand {
 
 /**
   Creates an SDK Action in the web view.
-
-  Note that this will overwrite any previous action, so make sure each action is completed.
  */
 public class CreateActionCommand : DelayedJavascriptCommand {
-	public init(action: String, payload: String? = nil) {
+	public init(
+		name: String,
+		action: String,
+		payload: String? = nil
+	) {
 		var args = "FRAMES.ActionTypes.\(action)"
 		if let json = payload {
 			args += ", \(json)"
 		}
 
-		super.init(functionName: "createAction", command:
+		super.init(functionName: "createAction_\(name)", command:
 			"""
-			frames.createAction = async function() {
-			    frames.action = frames.sdk.createAction(\(args));
+			frames.createAction_\(name) = async function() {
+			    frames.actions.\(name) = frames.sdk.createAction(\(args));
 			};
 
 			true
@@ -164,8 +180,16 @@ public class CreateActionCommand : DelayedJavascriptCommand {
 	}
 }
 
+/**
+ Creates a control for an existing SDK Action.
+ */
 public class CreateActionControlCommand : DelayedJavascriptCommand {
-	public init(controlType: String, domId: String, payload: String? = nil) {
+	public init(
+		actionName: String,
+		controlType: String,
+		domId: String,
+		payload: String? = nil
+	) {
 		var args = "'\(controlType)', '\(domId)'"
 		if let json = payload {
 			args += ", \(json)"
@@ -176,14 +200,14 @@ public class CreateActionControlCommand : DelayedJavascriptCommand {
 		super.init(functionName: fnName, command:
 			"""
 			frames.\(fnName) = async function() {
-			    frames.action.createFramesControl(\(args));
+			    frames.actions.\(actionName).createFramesControl(\(args));
 
 					const element = document.getElementById('\(domId)');
 
 					element.addEventListener(FRAMES.FramesEventType.OnValidated, () => { 
 							window.webkit.messageHandlers.handleOnValidated.postMessage({
 								domId: '\(domId)',
-								errors: frames.action.errors()
+								errors: frames.actions.\(actionName).errors()
 							})
 					});
 
@@ -201,17 +225,27 @@ public class CreateActionControlCommand : DelayedJavascriptCommand {
 		)
 	}
 
-	public convenience init(controlType: ControlType, domId: String, payload: String? = nil) {
-		self.init(controlType: controlType.rawValue, domId: domId, payload: payload)
+	public convenience init(
+		actionName: String,
+		controlType: ControlType,
+		domId: String,
+		payload: String? = nil
+	) {
+		self.init(
+			actionName: actionName,
+			controlType: controlType.rawValue,
+			domId: domId,
+			payload: payload
+		)
 	}
 }
 
 public class StartActionCommand : DelayedJavascriptCommand {
-	public init() {
-		super.init(functionName: "startAction", command:
+	public init(name: String) {
+		super.init(functionName: "startAction_\(name)", command:
 			"""
-			frames.startAction = async function() {
-			    await frames.action.start();
+			frames.startAction_\(name) = async function() {
+			    await frames.actions.\(name).start();
 			}
 
 			true
@@ -221,20 +255,20 @@ public class StartActionCommand : DelayedJavascriptCommand {
 }
 
 public class ClearFormCommand : JavascriptCommand {
-	public init() {
-		super.init(command: "frames.action.clear()")
+	public init(name: String) {
+		super.init(command: "frames.actions.\(name).clear()")
 	}
 }
 
 public class SubmitFormCommand : JavascriptCommand {
-	public init() {
+	public init(name: String) {
 		super.init(command:
 			"""
 			frames.submit = async function() {
 			    try {
-			        await this.action.submit()
+			        await this.actions.\(name).submit()
 			        
-			        const response = await this.action.complete()
+			        const response = await this.actions.\(name).complete()
 			        window.webkit.messageHandlers.handleOnComplete.postMessage(JSON.stringify(response))
 			    }
 			    catch(e) {
@@ -247,5 +281,27 @@ public class SubmitFormCommand : JavascriptCommand {
 			true
 			"""
 		)
+	}
+}
+
+/**
+ Command to complete an action without requiring user input/action. For example validating
+ a card with 3DS.
+ */
+public class CompleteActionCommand: DelayedJavascriptCommand {
+	public init(name: String, challengeResponses: [String] = []) {
+		super.init(functionName: "completeAction_\(name)", command:
+			"""
+			frames.completeAction_\(name) = async function() {
+			    // TODO: Currently save flag is placeholder
+			    const response = await this.actions.\(name).complete(false, \(challengeResponses))
+			    window.webkit.messageHandlers.handleOnComplete.postMessage(JSON.stringify(response))
+			}
+			"""
+		)
+	}
+
+	public convenience init(name: String, challengeResponses: [ChallengeResponse] = []) throws {
+		self.init(name: name, challengeResponses: try challengeResponses.map({ it in try it.toJson() }))
 	}
 }

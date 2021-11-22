@@ -14,8 +14,8 @@ public class ActionType {
 	 - Returns: A `CreateActionCommand`
 	 - Throws: `FramesErrors.ENCODE_JSON_ERROR` if there is an error encoding the payload to a String.
 	 */
-	public func toCommand() throws -> CreateActionCommand {
-		CreateActionCommand(action: type, payload: try payload?.toJson())
+	public func toCommand(name: String) throws -> CreateActionCommand {
+		CreateActionCommand(name: name, action: type, payload: try payload?.toJson())
 	}
 }
 
@@ -42,17 +42,25 @@ public class CaptureCard : ActionType {
 	public class Payload : Encodable {
 		let verify: Bool
 		let save: Bool
+		let useEverydayPay: Bool
 		let env3DS: ThreeDSEnv?
 
 		enum PayloadKeys: String, CodingKey {
 			case verify
 			case save
 			case threeDS
+			case useEverydayPay
 		}
 
-		public init(verify: Bool, save: Bool, env3DS: ThreeDSEnv?) {
+		public init(
+			verify: Bool,
+			save: Bool,
+			useEverydayPay: Bool = false,
+			env3DS: ThreeDSEnv? = nil
+		) {
 			self.verify = verify
 			self.save = save
+			self.useEverydayPay = useEverydayPay
 			self.env3DS = env3DS
 		}
 
@@ -60,6 +68,7 @@ public class CaptureCard : ActionType {
 			var container = encoder.container(keyedBy: PayloadKeys.self)
 			try container.encode(verify, forKey: .verify)
 			try container.encode(save, forKey: .save)
+			try container.encode(useEverydayPay, forKey: .useEverydayPay)
 
 			if let env = env3DS {
 				try container.encode(ThreeDSPayload(env3DS: env), forKey: .threeDS)

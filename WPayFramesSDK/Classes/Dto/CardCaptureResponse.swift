@@ -1,6 +1,7 @@
 public class CardCaptureResponse: Decodable {
   public let fraudResponse: FraudResponse?
   public let paymentInstrument: PaymentInstrument?
+  public let itemId: String?
   public let status: Status?
   public let stepUpToken: String?
   public let threeDSError: ThreeDSError?
