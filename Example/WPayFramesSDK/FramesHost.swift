@@ -92,7 +92,16 @@ class FramesHost: UIViewController, FramesViewCallback, PopoverNavigationDelegat
 				throw FramesErrors.FATAL_ERROR(message: "Missing CardCaptureResponse")
 			}
 
-			let message = "\(data.status!.responseText!) - \(data.paymentInstrument!.itemId!)"
+			var id: String?
+
+			if (data.paymentInstrument?.itemId != nil) {
+				id = data.paymentInstrument?.itemId
+			}
+			else {
+				id = data.itemId
+			}
+
+			let message = "\(data.status?.responseText ?? "") - \(id!)"
 
 			messageView.text = message
 		} catch {
