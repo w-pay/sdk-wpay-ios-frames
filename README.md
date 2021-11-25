@@ -29,7 +29,7 @@ the usage of the SDK with native logic and UI components eg: Buttons.
 
 The iOS SDK comes bundled with the Frames JS SDK so that the iOS SDK can use a known
 version at runtime. The JS file in the `Assets` dir is taken from the `dist` of the Frames SDK
-repo and currently targets version `2.0.2`.
+repo and currently targets version `2.1.0`.
 
 ## Authentication
 

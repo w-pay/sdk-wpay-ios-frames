@@ -28,7 +28,7 @@ window.onload = function() {
 }
 """
 
-let JS_SDK_VERSION = "2.0.2"
+let JS_SDK_VERSION = "2.1.0"
 
 public typealias EvalCallback = (Any?, Error?) -> Void
 
