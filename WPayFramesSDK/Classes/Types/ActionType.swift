@@ -121,8 +121,7 @@ public class ValidateCard : ActionType {
 
 		enum PayloadKeys: String, CodingKey {
 			case sessionId
-			case env3DS
-			case acsWindowSize
+			case threeDS
 		}
 
 		public init(sessionId: String, env3DS: ThreeDSEnv, acsWindowSize: AcsWindowSize = AcsWindowSize.ACS_250x400) {
@@ -135,8 +134,53 @@ public class ValidateCard : ActionType {
 			var container = encoder.container(keyedBy: PayloadKeys.self)
 
 			try container.encode(sessionId, forKey: .sessionId)
-			try container.encode(env3DS.rawValue, forKey: .env3DS)
-			try container.encode(acsWindowSize.rawValue, forKey: .acsWindowSize)
+			try container.encode(
+				ThreeDSPayload(threeDSEnv: env3DS, windowSize: acsWindowSize),
+				forKey: .threeDS
+			)
+		}
+	}
+
+	private class ThreeDSPayload : Encodable {
+		private let threeDSEnv: ThreeDSEnv
+		private let windowSize: AcsWindowSize
+
+		enum PayloadKeys: String, CodingKey {
+			case env
+			case consumerAuthenticationInformation
+		}
+
+		init(threeDSEnv: ThreeDSEnv, windowSize: AcsWindowSize) {
+			self.threeDSEnv = threeDSEnv
+			self.windowSize = windowSize
+		}
+
+		func encode(to encoder: Encoder) throws {
+			var container = encoder.container(keyedBy: PayloadKeys.self)
+
+			try container.encode(threeDSEnv.rawValue, forKey: .env)
+			try container.encode(
+				ConsumerAuthenticationInformationPayload(windowSize: windowSize),
+				forKey: .consumerAuthenticationInformation
+			)
+		}
+	}
+
+	private class ConsumerAuthenticationInformationPayload : Encodable {
+		private let windowSize: AcsWindowSize
+
+		enum PayloadKeys: String, CodingKey {
+			case acsWindowSize
+		}
+
+		init(windowSize: AcsWindowSize) {
+			self.windowSize = windowSize
+		}
+
+		func encode(to encoder: Encoder) throws {
+			var container = encoder.container(keyedBy: PayloadKeys.self)
+
+			try container.encode(windowSize.rawValue, forKey: .acsWindowSize)
 		}
 	}
 
