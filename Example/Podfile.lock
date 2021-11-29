@@ -1,5 +1,5 @@
 PODS:
-  - WPayFramesSDK (0.2.0)
+  - WPayFramesSDK (0.3.0)
 
 DEPENDENCIES:
   - WPayFramesSDK (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  WPayFramesSDK: 3206a795d13d8f8b9fe7cf81aa95816e69307a54
+  WPayFramesSDK: 111cabe69be5976cc20fa14bbb50f72c8c9d209f
 
 PODFILE CHECKSUM: aa5232f3a6ada49863db2c9128930717f00dc0b4
 
