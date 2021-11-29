@@ -297,6 +297,8 @@ public class CompleteActionCommand: DelayedJavascriptCommand {
 			    const response = await this.actions.\(name).complete(false, \(challengeResponses))
 			    window.webkit.messageHandlers.handleOnComplete.postMessage(JSON.stringify(response))
 			}
+
+			true
 			"""
 		)
 	}
