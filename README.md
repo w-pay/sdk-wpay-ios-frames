@@ -57,6 +57,9 @@ Once a card has been tokenised, the instrument ID is displayed. Using that ID th
 can then used. The new instrument will be in the customer's instrument list. To tokenise the same
 card again, the instrument will need to be removed from the customer's profile first.
 
+An example of how to use 3DS is also included. Apps will need to determine the best way to display
+3DS challenges based on their needs.
+
 See:
 - List customer payment instruments `GET /instore/customer/instruments`
 - Remove payment instrument `DELETE /instore/customer/instruments/:id`

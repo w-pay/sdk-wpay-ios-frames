@@ -146,8 +146,12 @@ class FramesHost: UIViewController, FramesViewCallback, PopoverNavigationDelegat
 		 */
 	}
 
-	func onRendered() {
-		debug("onRendered()")
+	func onRemoved(id: String) {
+		debug("onRemoved(\(id))")
+	}
+
+	func onRendered(id: String) {
+		debug("onRendered(\(id))")
 	}
 
 	func navigateTo(vc: UIViewController) {
@@ -162,7 +166,7 @@ class FramesHost: UIViewController, FramesViewCallback, PopoverNavigationDelegat
 		)
 	}
 
-	private func debug(_ message: String) {
+	internal func debug(_ message: String) {
 		print("[Callback] \(message)")
 	}
 }

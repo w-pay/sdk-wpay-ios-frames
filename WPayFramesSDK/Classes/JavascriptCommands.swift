@@ -1,7 +1,7 @@
 /**
   A "Javascript command" is a piece of Javascript that can be evaluated inside the `FramesView`
  */
-public class JavascriptCommand {
+open class JavascriptCommand {
 	/*
 	  The JS code to run.
 
@@ -57,9 +57,11 @@ public class DelayedJavascriptCommand : JavascriptCommand {
   errors.
  */
 public class GroupCommand: JavascriptCommand {
+	public let name: String
 	private let commands: [DelayedJavascriptCommand]
 
 	public init(name: String, commands: [DelayedJavascriptCommand], callback: String = "") {
+		self.name = name
 		self.commands = commands
 
 		super.init(command:
@@ -103,7 +105,7 @@ public class GroupCommand: JavascriptCommand {
  */
 public class BuildFramesCommand : GroupCommand {
 	public init(commands: DelayedJavascriptCommand...) {
-		super.init(name: "build", commands: commands, callback: "window.webkit.messageHandlers.handleOnRendered.postMessage('')")
+		super.init(name: "build", commands: commands, callback: "window.webkit.messageHandlers.handleOnRendered.postMessage('build')")
 	}
 }
 
@@ -218,6 +220,15 @@ public class CreateActionControlCommand : DelayedJavascriptCommand {
 					element.addEventListener(FRAMES.FramesEventType.OnFocus, () => { 
 							window.webkit.messageHandlers.handleOnFocus.postMessage('\(domId)')
 					});
+
+					// this needed in case the element is for a 3DS challenge
+			    element.addEventListener(FRAMES.FramesCardinalEventType.OnRender, () => { 
+							window.webkit.messageHandlers.handleOnRendered.postMessage('\(actionName)');
+					});
+
+			    element.addEventListener(FRAMES.FramesCardinalEventType.OnClose, () => {
+							window.webkit.messageHandlers.handleOnRemoved.postMessage('\(actionName)');
+					});
 			}
 
 			true
@@ -303,7 +314,7 @@ public class CompleteActionCommand: DelayedJavascriptCommand {
 		)
 	}
 
-	public convenience init(name: String, challengeResponses: [ChallengeResponse] = []) throws {
+	public convenience init(name: String, challengeResponses: [ChallengeResponse]) throws {
 		self.init(name: name, challengeResponses: try challengeResponses.map({ it in try it.toJson() }))
 	}
 }

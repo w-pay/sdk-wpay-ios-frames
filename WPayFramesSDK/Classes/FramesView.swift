@@ -88,8 +88,17 @@ public protocol FramesViewCallback {
 
 	/**
 		Called when JS SDK Action has added content to the host page.
+
+    - Parameter id: A command specific ID to identify the content that was just rendered.
 	 */
-	func onRendered()
+	func onRendered(id: String)
+
+	/**
+	  Called when JS SDK Action has removed content from the host page.
+
+	  - Parameter id: A command specific ID to identify the content that was just removed.
+	 */
+	func onRemoved(id: String)
 }
 
 /**
@@ -160,6 +169,7 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 			case "handleOnComplete": handleOnComplete(message: message)
 			case "handleOnError": handleOnError(message: message)
 			case "handleOnFocus": handleOnFocus(message: message)
+			case "handleOnRemoved": handleOnRemoved(message: message)
 			case "handleOnRendered": handleOnRendered(message: message)
 			case "handleOnValidated": handleOnValidated(message: message)
 
@@ -262,6 +272,7 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 		configuration.userContentController.add(self, name: "handleOnComplete")
 		configuration.userContentController.add(self, name: "handleOnError")
 		configuration.userContentController.add(self, name: "handleOnFocus")
+		configuration.userContentController.add(self, name: "handleOnRemoved")
 		configuration.userContentController.add(self, name: "handleOnRendered")
 		configuration.userContentController.add(self, name: "handleOnValidated")
 	}
@@ -317,10 +328,20 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 		callback?.onFocusChange(domId: domId, isFocussed: true)
 	}
 
-	private func handleOnRendered(message: WKScriptMessage) {
-		log("handleOnRendered()")
+	private func handleOnRemoved(message: WKScriptMessage) {
+		let id = message.body as! String
 
-		callback?.onRendered()
+		log("handleOnRemoved(\(id))")
+
+		callback?.onRemoved(id: id)
+	}
+
+	private func handleOnRendered(message: WKScriptMessage) {
+		let id = message.body as! String
+
+		log("handleOnRendered(\(id))")
+
+		callback?.onRendered(id: id)
 	}
 
 	private func handleOnValidated(message: WKScriptMessage) {

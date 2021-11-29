@@ -17,6 +17,7 @@
 		BC8DC0B44302C68A056BF7C6 /* MultiLineCardCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8DC8271BB42A180A73C26A /* MultiLineCardCapture.swift */; };
 		BC8DC699D50C98F389423DF2 /* SingleCardCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8DC3C62B3C012971ACF7C8 /* SingleCardCapture.swift */; };
 		BC8DCC0F0729731E54BD306D /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8DCB028DAC894F50F88ED1 /* PopoverViewController.swift */; };
+		BC8DCD2DF60705878CF0EBC2 /* ThreeDSCardCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8DC7DA937E306ECB0EDF1C /* ThreeDSCardCapture.swift */; };
 		BC8DCF5B9FC861C97A357054 /* FramesHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8DCBC721ABFCFF368677CC /* FramesHost.swift */; };
 		EF3747052DFF4AAEAA6C2F61 /* Pods_WPayFramesSDK_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AC6F27F58790710DE435B83 /* Pods_WPayFramesSDK_Example.framework */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,7 @@
 		9AC6F27F58790710DE435B83 /* Pods_WPayFramesSDK_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WPayFramesSDK_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC8DC3C62B3C012971ACF7C8 /* SingleCardCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleCardCapture.swift; sourceTree = "<group>"; };
 		BC8DC54FEFB5819C5AD20D9A /* FramesHost.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FramesHost.xib; sourceTree = "<group>"; };
+		BC8DC7DA937E306ECB0EDF1C /* ThreeDSCardCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreeDSCardCapture.swift; sourceTree = "<group>"; };
 		BC8DC8271BB42A180A73C26A /* MultiLineCardCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiLineCardCapture.swift; sourceTree = "<group>"; };
 		BC8DCB028DAC894F50F88ED1 /* PopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
 		BC8DCBC721ABFCFF368677CC /* FramesHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FramesHost.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				BC8DCBC721ABFCFF368677CC /* FramesHost.swift */,
 				BC8DC54FEFB5819C5AD20D9A /* FramesHost.xib */,
 				BC8DCB028DAC894F50F88ED1 /* PopoverViewController.swift */,
+				BC8DC7DA937E306ECB0EDF1C /* ThreeDSCardCapture.swift */,
 			);
 			name = "Example for WPayFramesSDK";
 			path = WPayFramesSDK;
@@ -349,6 +352,7 @@
 				BC8DC0B44302C68A056BF7C6 /* MultiLineCardCapture.swift in Sources */,
 				BC8DCF5B9FC861C97A357054 /* FramesHost.swift in Sources */,
 				BC8DCC0F0729731E54BD306D /* PopoverViewController.swift in Sources */,
+				BC8DCD2DF60705878CF0EBC2 /* ThreeDSCardCapture.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
