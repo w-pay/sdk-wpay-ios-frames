@@ -294,7 +294,7 @@ public class CompleteActionCommand: DelayedJavascriptCommand {
 			"""
 			frames.completeAction_\(name) = async function() {
 			    // TODO: Currently save flag is placeholder
-			    const response = await this.actions.\(name).complete(false, \(challengeResponses))
+			    const response = await this.actions.\(name).complete(false, [ \(challengeResponses.joined(separator: ",")) ])
 			    window.webkit.messageHandlers.handleOnComplete.postMessage(JSON.stringify(response))
 			}
 
