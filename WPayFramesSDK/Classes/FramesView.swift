@@ -213,12 +213,22 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 	  - Parameter command: The command to execute
 	  - Parameter callback: If the JS returns a result, the callback will receive it.
 	 */
-	func postCommand(command: JavascriptCommand, callback: EvalCallback? = nil) {
+	public func postCommand(command: JavascriptCommand, callback: EvalCallback? = nil) {
 		let js = command.command
 
 		log("JavascriptCommand: \(js)")
 
 		evaluateJavaScript(js, completionHandler: callback)
+	}
+
+	/**
+	  The behaviour in the callback is often coupled to the type of actions being run
+	  by the Javascript SDK. Being able to set the callback allows applications to swap
+	  how the application will respond to events without having to implement complex
+	  Strategies or switching.
+	 */
+	public func setCallback(callback: FramesViewCallback) {
+		self.callback = callback
 	}
 
 	private func initialiseWebView() {

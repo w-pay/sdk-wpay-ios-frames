@@ -22,7 +22,6 @@ class FramesHost: UIViewController, FramesViewCallback, PopoverNavigationDelegat
 	}
 
 	@IBAction func onClear(_ sender: Any) {
-		ClearFormCommand().post(view: framesView)
 		messageView.text = ""
 	}
 
@@ -47,7 +46,7 @@ class FramesHost: UIViewController, FramesViewCallback, PopoverNavigationDelegat
 	}
 
 	@IBAction func onSubmit(_ sender: Any) {
-		SubmitFormCommand().post(view: framesView)
+		// by default do nothing
 	}
 
 	override func loadView() {
