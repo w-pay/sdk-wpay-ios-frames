@@ -29,7 +29,7 @@ the usage of the SDK with native logic and UI components eg: Buttons.
 
 The iOS SDK comes bundled with the Frames JS SDK so that the iOS SDK can use a known
 version at runtime. The JS file in the `Assets` dir is taken from the `dist` of the Frames SDK
-repo and currently targets version `2.0.2`.
+repo and currently targets version `2.1.0`.
 
 ## Authentication
 
@@ -56,6 +56,9 @@ The sample app highlights the ability to combine native controls like buttons wi
 Once a card has been tokenised, the instrument ID is displayed. Using that ID the payment instrument
 can then used. The new instrument will be in the customer's instrument list. To tokenise the same
 card again, the instrument will need to be removed from the customer's profile first.
+
+An example of how to use 3DS is also included. Apps will need to determine the best way to display
+3DS challenges based on their needs.
 
 See:
 - List customer payment instruments `GET /instore/customer/instruments`

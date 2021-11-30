@@ -7,7 +7,8 @@ protocol PopoverNavigationDelegate {
 class PopoverViewController : UITableViewController {
 	private let examples = [
 		"Single Card Capture",
-		"Multi Line Card Capture"
+		"Multi Line Card Capture",
+		"ThreeDS Card Capture"
 	]
 
 	public var delegate: PopoverNavigationDelegate?
@@ -49,11 +50,14 @@ class PopoverViewController : UITableViewController {
 
 	private func createViewControllerForPos(pos: Int) -> FramesHost {
 		switch (pos) {
-		case 0:
-			return SingleCardCapture()
+			case 0:
+				return SingleCardCapture()
 
-		default:
-			return MultiLineCardCapture()
+			case 1:
+				return MultiLineCardCapture()
+
+			default:
+				return ThreeDSCardCapture()
 		}
 	}
 }

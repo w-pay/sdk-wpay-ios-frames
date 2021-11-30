@@ -4,7 +4,7 @@ extension Encodable {
 
 		- Throws: `FramesErrors.ENCODE_JSON_ERROR` if there is an error encoding the data to a String.
 	 */
-	func toJson() throws -> String {
+	public func toJson() throws -> String {
 		var data: Data
 
 		do {

@@ -80,6 +80,16 @@
             </objects>
             <point key="canvasLocation" x="1076" y="901"/>
         </scene>
+        <!--ThreeDS Card Capture-->
+        <scene sceneID="o5G-Ic-je2">
+            <objects>
+                <viewController storyboardIdentifier="ThreeDSCardCapture" id="bsk-dF-H8u" customClass="ThreeDSCardCapture" customModule="WPayFramesSDK_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Mab-gT-UA6"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MlA-Mj-FNB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1934" y="901"/>
+        </scene>
     </scenes>
     <resources>
         <systemColor name="systemBackgroundColor">

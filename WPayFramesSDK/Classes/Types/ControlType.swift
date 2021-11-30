@@ -3,4 +3,5 @@ public enum ControlType: String {
 	case CARD_NUMBER = "CardNo"
 	case CARD_EXPIRY = "CardExpiry"
 	case CARD_CVV = "CardCVV"
+	case VALIDATE_CARD = "ValidateCard"
 }
