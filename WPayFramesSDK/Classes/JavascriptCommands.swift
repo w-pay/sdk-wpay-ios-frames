@@ -300,12 +300,11 @@ public class SubmitFormCommand : JavascriptCommand {
  a card with 3DS.
  */
 public class CompleteActionCommand: DelayedJavascriptCommand {
-	public init(name: String, challengeResponses: [String] = []) {
+	public init(name: String, save: Bool = true, challengeResponses: [String] = []) {
 		super.init(functionName: "completeAction_\(name)", command:
 			"""
 			frames.completeAction_\(name) = async function() {
-			    // TODO: Currently save flag is placeholder
-			    const response = await this.actions.\(name).complete(false, [ \(challengeResponses.joined(separator: ",")) ])
+			    const response = await this.actions.\(name).complete(\(save), [ \(challengeResponses.joined(separator: ",")) ])
 			    window.webkit.messageHandlers.handleOnComplete.postMessage(JSON.stringify(response))
 			}
 
