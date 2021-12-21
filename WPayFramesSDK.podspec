@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.cocoapods_version = ">= 1.10"
 
   s.name             = "WPayFramesSDK"
-  s.version          = "0.3.0"
+  s.version          = "0.4.0"
   s.summary          = "iOS wrapper around WPay Frames JS SDK."
 
 # This description is used to generate tags and improve search results.
