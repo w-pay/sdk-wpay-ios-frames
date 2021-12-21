@@ -309,7 +309,11 @@ public class SubmitFormCommand : JavascriptCommand {
  a card with 3DS.
  */
 public class CompleteActionCommand: DelayedJavascriptCommand {
-	public init(name: String, save: Bool = true, challengeResponses: [String] = []) {
+	public init(
+		name: String,
+		save: Bool = true,
+		challengeResponses: [String] = []
+	) {
 		super.init(functionName: "completeAction_\(name)", command:
 			"""
 			frames.completeAction_\(name) = async function() {
@@ -322,7 +326,15 @@ public class CompleteActionCommand: DelayedJavascriptCommand {
 		)
 	}
 
-	public convenience init(name: String, challengeResponses: [ChallengeResponse]) throws {
-		self.init(name: name, challengeResponses: try challengeResponses.map({ it in try it.toJson() }))
+	public convenience init(
+		name: String,
+		save: Bool = true,
+		challengeResponses: [ChallengeResponse]
+	) throws {
+		self.init(
+			name: name,
+			save: save,
+			challengeResponses: try challengeResponses.map({ it in try it.toJson() })
+		)
 	}
 }
