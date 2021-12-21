@@ -40,10 +40,10 @@ public class CaptureCard : ActionType {
 	}
 
 	public class Payload : Encodable {
-		let verify: Bool
-		let save: Bool
-		let useEverydayPay: Bool
-		let env3DS: ThreeDSEnv?
+		public let verify: Bool
+		public let save: Bool
+		public let useEverydayPay: Bool
+		public let env3DS: ThreeDSEnv?
 
 		enum PayloadKeys: String, CodingKey {
 			case verify
@@ -83,8 +83,8 @@ public class CaptureCard : ActionType {
 
 public class StepUp : ActionType {
 	public class Payload : Encodable {
-		let paymentInstrumentId: String
-		let scheme: String
+		public let paymentInstrumentId: String
+		public let scheme: String
 
 		public init(paymentInstrumentId: String, scheme: String) {
 			self.paymentInstrumentId = paymentInstrumentId
@@ -99,8 +99,8 @@ public class StepUp : ActionType {
 
 public class UpdateCard : ActionType {
 	public class Payload : Encodable {
-		let paymentInstrumentId: String
-		let scheme: String
+		public let paymentInstrumentId: String
+		public let scheme: String
 
 		public init(paymentInstrumentId: String, scheme: String) {
 			self.paymentInstrumentId = paymentInstrumentId
@@ -115,9 +115,9 @@ public class UpdateCard : ActionType {
 
 public class ValidateCard : ActionType {
 	public class Payload : Encodable {
-		let sessionId: String
-		let env3DS: ThreeDSEnv
-		let acsWindowSize: AcsWindowSize
+		public let sessionId: String
+		public let env3DS: ThreeDSEnv
+		public let acsWindowSize: AcsWindowSize
 
 		enum PayloadKeys: String, CodingKey {
 			case sessionId
