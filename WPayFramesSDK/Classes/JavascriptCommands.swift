@@ -221,6 +221,15 @@ public class CreateActionControlCommand : DelayedJavascriptCommand {
 							window.webkit.messageHandlers.handleOnFocus.postMessage('\(domId)')
 					});
 
+					// this will only be fired once per form.
+					element.addEventListener(FRAMES.FramesEventType.FormValid, () => { 
+							window.webkit.messageHandlers.handleFormValid.postMessage(true)
+					});
+
+					element.addEventListener(FRAMES.FramesEventType.FormInvalid, () => { 
+							window.webkit.messageHandlers.handleFormValid.postMessage(false) 
+					});
+
 					// this needed in case the element is for a 3DS challenge
 			    element.addEventListener(FRAMES.FramesCardinalEventType.OnRender, () => { 
 							window.webkit.messageHandlers.handleOnRendered.postMessage('\(actionName)');
@@ -300,12 +309,11 @@ public class SubmitFormCommand : JavascriptCommand {
  a card with 3DS.
  */
 public class CompleteActionCommand: DelayedJavascriptCommand {
-	public init(name: String, challengeResponses: [String] = []) {
+	public init(name: String, save: Bool = true, challengeResponses: [String] = []) {
 		super.init(functionName: "completeAction_\(name)", command:
 			"""
 			frames.completeAction_\(name) = async function() {
-			    // TODO: Currently save flag is placeholder
-			    const response = await this.actions.\(name).complete(false, [ \(challengeResponses.joined(separator: ",")) ])
+			    const response = await this.actions.\(name).complete(\(save), [ \(challengeResponses.joined(separator: ",")) ])
 			    window.webkit.messageHandlers.handleOnComplete.postMessage(JSON.stringify(response))
 			}
 

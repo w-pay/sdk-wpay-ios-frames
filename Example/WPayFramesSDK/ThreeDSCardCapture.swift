@@ -190,6 +190,7 @@ class ThreeDSCardCapture: FramesHost {
 			GroupCommand(name: "completeCardCapture",
 				commands: CompleteActionCommand(
 					name: ThreeDSCardCapture.CARD_CAPTURE_ACTION_NAME,
+					save: cardCaptureOptions().save,
 					challengeResponses: challenges
 				)
 			).post(view: framesView, callback: nil)
