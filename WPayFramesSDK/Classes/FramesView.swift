@@ -73,6 +73,15 @@ public protocol FramesViewCallback {
 	func onValidationChange(domId: String, isValid: Bool)
 
 	/**
+	  Called when the validation status of the form has changed.
+
+	  Can be used to coordinate the validation status of multiple elements
+
+	  - Parameter isValid: Whether the form itself is valid
+	 */
+	func onFormValidationChange(isValid: Bool)
+
+	/**
 		Called when the focus has changed on an element
 
 		- Parameter domId: The ID of the element in the HTML DOM tree
@@ -172,6 +181,7 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 			case "handleOnRemoved": handleOnRemoved(message: message)
 			case "handleOnRendered": handleOnRendered(message: message)
 			case "handleOnValidated": handleOnValidated(message: message)
+			case "handleFormValid": handleFormValid(message: message)
 
 			default:
 				callback?.onError(error: FramesErrors.FATAL_ERROR(message: "Unrecognised JS handler \(message.name)"))
@@ -275,6 +285,7 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 		configuration.userContentController.add(self, name: "handleOnRemoved")
 		configuration.userContentController.add(self, name: "handleOnRendered")
 		configuration.userContentController.add(self, name: "handleOnValidated")
+		configuration.userContentController.add(self, name: "handleFormValid")
 	}
 
 	private func handleFramesSDKLoaded(message: WKScriptMessage) {
@@ -299,7 +310,7 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 	private func handleOnBlur(message: WKScriptMessage) {
 		let domId = message.body as! String
 
-		log("handleOnBlur(\(domId)")
+		log("handleOnBlur(\(domId))")
 
 		callback?.onFocusChange(domId: domId, isFocussed: false)
 	}
@@ -349,7 +360,7 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 		let domId = body["domId"] as! String
 		let errors = body["errors"] as! [String]
 
-		log("handleOnValidated(\(domId), \(errors.joined(separator: ","))")
+		log("handleOnValidated(\(domId), \(errors.joined(separator: ",")))")
 
 		if (errors.count > 0) {
 			callback?.onValidationChange(domId: domId, isValid: false)
@@ -358,6 +369,14 @@ public class FramesView : WKWebView, WKScriptMessageHandler {
 		else {
 			callback?.onValidationChange(domId: domId, isValid: true)
 		}
+	}
+
+	private func handleFormValid(message: WKScriptMessage) {
+		let isValid = message.body as! Bool
+
+		log("handleFormValid(\(isValid))")
+
+		callback?.onFormValidationChange(isValid: isValid)
 	}
 
 	/**

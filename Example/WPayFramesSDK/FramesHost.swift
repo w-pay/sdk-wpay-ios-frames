@@ -34,7 +34,7 @@ class FramesHost: UIViewController, FramesViewCallback, PopoverNavigationDelegat
 		do {
 			try framesView.loadFrames(config: FramesConfig(
 				apiKey: "95udD3oX82JScUQ1qyACSOMysyAl93Gb",
-				authToken: "Bearer WbSRULNyePzpyvR1n2ePHMNVunXp",
+				authToken: "Bearer 3V5AiSWei3yuDdPzl2n42eKGwNA0",
 				apiBase: "https://dev.mobile-api.woolworths.com.au/wow/v1/pay/instore",
 				logLevel: LogLevel.DEBUG
 			))
@@ -130,6 +130,10 @@ class FramesHost: UIViewController, FramesViewCallback, PopoverNavigationDelegat
 
 	func onValidationChange(domId: String, isValid: Bool) {
 		debug("onValidationChange(\(domId), isValid: \(isValid))")
+	}
+
+	func onFormValidationChange(isValid: Bool) {
+		debug("onFormValidationChange(\(isValid))")
 	}
 
 	func onFocusChange(domId: String, isFocussed: Bool) {

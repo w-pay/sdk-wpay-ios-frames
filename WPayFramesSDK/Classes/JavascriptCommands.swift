@@ -221,6 +221,15 @@ public class CreateActionControlCommand : DelayedJavascriptCommand {
 							window.webkit.messageHandlers.handleOnFocus.postMessage('\(domId)')
 					});
 
+					// this will only be fired once per form.
+					element.addEventListener(FRAMES.FramesEventType.FormValid, () => { 
+							window.webkit.messageHandlers.handleFormValid.postMessage(true)
+					});
+
+					element.addEventListener(FRAMES.FramesEventType.FormInvalid, () => { 
+							window.webkit.messageHandlers.handleFormValid.postMessage(false) 
+					});
+
 					// this needed in case the element is for a 3DS challenge
 			    element.addEventListener(FRAMES.FramesCardinalEventType.OnRender, () => { 
 							window.webkit.messageHandlers.handleOnRendered.postMessage('\(actionName)');
