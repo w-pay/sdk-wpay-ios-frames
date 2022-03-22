@@ -1,5 +1,10 @@
 /**
   A "Javascript command" is a piece of Javascript that can be evaluated inside the `FramesView`
+
+  *Note*: The `WKWebView` expects a return value from the evaluation of blocks of Javascript
+  to indicate success (or not) of the block evaluation. Returning nothing (undefined) is falsy
+  and thus the view can think there was an evaluation error. Therefore each block of code returns
+  `true` by default by having `true` be the last statement evaluated.
  */
 open class JavascriptCommand {
 	/*
